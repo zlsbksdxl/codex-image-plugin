@@ -1,64 +1,48 @@
-# GPT Image 2 for Codex
+# Codex Image Plugin
 
-A small, installable Codex plugin for generating and editing raster images with GPT Image 2. It packages the `gpt-image-2` Skill and a safe local wrapper that reads the active Codex provider configuration without printing or persisting API keys.
+A public Codex plugin for generating and editing raster images through an OpenAI-compatible image API. Give it an endpoint URL, an API key, and a model ID; the plugin passes the selected model through unchanged. It is not tied to one vendor or one image model.
 
 [中文说明](README.zh-CN.md)
 
 ## Features
 
-- Text-to-image generation with `gpt-image-2`.
-- Edits with one or more reference images.
-- Localized edits with an alpha PNG mask, including a generated ring mask for square images.
-- Prompt helpers for use case, style, composition, and constraints.
-- `--dry-run` validation before a paid API request.
-- No hard-coded credentials and no use of Codex session bearer tokens.
+- Generate images with any compatible model ID.
+- Edit one or more reference images and optional alpha masks.
+- List models exposed by the configured endpoint.
+- Generate one result per discovered image-capable model with `generate-all`.
+- Accept credentials from `--base-url`/`--api-key`, environment variables, or the active Codex provider.
+- Never print or persist API keys. Codex session bearer tokens are not used.
 
 ## Install from GitHub
 
 ```bash
 codex plugin marketplace add zlsbksdxl/gpt-image-2-skill-codex-gpt --ref main
-codex plugin add gpt-image-2-codex@gpt-image-2-skill-codex-gpt
+codex plugin add codex-image-plugin@codex-image-plugin
 ```
 
-Restart Codex or start a new task after installation. Invoke it explicitly with `$gpt-image-2`, or describe an image-generation or image-editing request normally.
+Restart Codex or start a new task after installation. Invoke the skill with `$codex-image-plugin`.
 
 ## Local development
 
-The repository can live anywhere. For the author's local checkout:
-
 ```bash
 cd /Users/starfall/Project/gpt-image-2-skill-codex-gpt
+python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
+  models \
+  --base-url "https://api.example.com/v1" \
+  --api-key "$OPENAI_API_KEY" \
+  --image-only
 ```
 
-To test the skill source without installing it globally:
+Use an environment variable for the key when possible so it does not appear in shell history. The script also reads `OPENAI_BASE_URL`, `OPENAI_API_KEY`, and the active provider in `~/.codex/config.toml`.
+
+## Generate with a selected model
 
 ```bash
-python3 plugins/gpt-image-2-codex/skills/gpt-image-2/scripts/image.py generate \
-  --prompt "A clean architectural visualization" \
-  --out outputs/architecture.png \
-  --dry-run
-```
-
-## Configuration
-
-The wrapper reads the active provider from `~/.codex/config.toml`:
-
-```toml
-model_provider = "OpenAI"
-
-[model_providers.OpenAI]
-OPENAI_API_KEY = "your-image-api-key"
-base_url = "https://api.openai.com/v1"
-```
-
-The key may instead be supplied as `OPENAI_API_KEY`, and the endpoint as `OPENAI_BASE_URL`. A configured endpoint may be an OpenAI-compatible gateway. The wrapper never reads or reuses `experimental_bearer_token`.
-
-The local Codex ImageGen runtime must be available at `~/.codex/skills/.system/imagegen/scripts/image_gen.py`, or at the path passed with `--image-gen`.
-
-## Generate an image
-
-```bash
-python3 plugins/gpt-image-2-codex/skills/gpt-image-2/scripts/image.py generate \
+python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
+  generate \
+  --base-url "https://api.example.com/v1" \
+  --api-key "$OPENAI_API_KEY" \
+  --model "gpt-image-2" \
   --prompt "A clean product photo of a ceramic mug on a white studio background" \
   --out outputs/mug.png \
   --quality high \
@@ -66,27 +50,40 @@ python3 plugins/gpt-image-2-codex/skills/gpt-image-2/scripts/image.py generate \
   --force
 ```
 
-Useful optional flags: `--use-case`, `--style`, `--composition`, `--constraints`, and `--dry-run`.
+`gpt-image-2` is only an example. Use an ID returned by `models` or documented by your endpoint. The wrapper does not hardcode the model.
 
-## Edit an image
+## Edit a reference image
 
 ```bash
-python3 plugins/gpt-image-2-codex/skills/gpt-image-2/scripts/image.py edit \
+python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
+  edit \
+  --base-url "https://api.example.com/v1" \
+  --api-key "$OPENAI_API_KEY" \
+  --model "gpt-image-2" \
   --image work/input.png \
   --prompt "Change only the background. Preserve the subject exactly: same shape, pose, proportions, colors, lighting, and details." \
   --out outputs/edited.png \
-  --quality high \
-  --size 1024x1024 \
   --force
 ```
 
-Repeat `--image` for multiple references. Add `--mask mask.png` for a localized edit. The mask must be a PNG with alpha; transparent pixels are editable and opaque pixels are preserved. `--mask-ring` creates a temporary ring mask for a square image.
+Repeat `--image` for multiple references. Add `--mask mask.png` for a localized edit or `--mask-ring` for a generated outer-ring mask on a square image.
 
-## Limitations
+## Use every discovered image model
 
-- GPT Image 2 does not provide true transparent-background output through this workflow. Generate against a plain or chroma background, then remove it locally if alpha is required.
-- Image edits can reinterpret protected content. Use a precise preservation prompt and a mask when pixel-level preservation matters.
-- Image generation and editing use API billing from the configured provider. Run `--dry-run` first when checking a new setup.
+```bash
+python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
+  generate-all \
+  --base-url "https://api.example.com/v1" \
+  --api-key "$OPENAI_API_KEY" \
+  --prompt "A clean architectural visualization" \
+  --out-dir outputs/by-model
+```
+
+`generate-all` first calls `/models`, filters image-like IDs or image-capability metadata, then makes one paid generation request per match. Use it only when you want separate outputs from every discovered image model. If an endpoint does not expose `/models`, call `generate` with an explicit `--model`.
+
+## Dry-run and configuration
+
+Add `--dry-run` to `models`, `generate`, `edit`, or `generate-all` to inspect the endpoint and payload without making an API request. Model-specific limits for size, quality, masks, formats, and transparency are determined by the endpoint; the API response is reported directly when a request is invalid.
 
 ## License
 

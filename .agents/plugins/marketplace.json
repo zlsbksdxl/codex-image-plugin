@@ -1,14 +1,14 @@
 {
-  "name": "gpt-image-2-skill-codex-gpt",
+  "name": "codex-image-plugin",
   "interface": {
-    "displayName": "GPT Image 2 Skills"
+    "displayName": "Codex Image Plugin"
   },
   "plugins": [
     {
-      "name": "gpt-image-2-codex",
+      "name": "codex-image-plugin",
       "source": {
         "source": "local",
-        "path": "./plugins/gpt-image-2-codex"
+        "path": "./plugins/codex-image-plugin"
       },
       "policy": {
         "installation": "AVAILABLE",
