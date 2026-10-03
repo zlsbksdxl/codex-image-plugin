@@ -1,0 +1,39 @@
+{
+  "name": "gpt-image-2-codex",
+  "version": "0.1.0",
+  "description": "A Codex plugin for generating and editing raster images with GPT Image 2 through the local Codex configuration.",
+  "author": {
+    "name": "Starfall",
+    "url": "https://github.com/zlsbksdxl"
+  },
+  "homepage": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
+  "repository": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
+  "license": "MIT",
+  "keywords": [
+    "gpt-image-2",
+    "image-generation",
+    "image-editing",
+    "codex",
+    "openai"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "GPT Image 2",
+    "shortDescription": "用 Codex 配置调用 GPT Image 2 画图修图",
+    "longDescription": "Generate new raster images or edit one or more reference images with GPT Image 2. The skill reads an OpenAI API key and optional base URL from the active Codex provider without printing or persisting secrets.",
+    "developerName": "Starfall",
+    "category": "Creativity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
+    "defaultPrompt": [
+      "Generate an image with GPT Image 2 from this brief.",
+      "Edit this image while preserving the subject.",
+      "Use a mask to change only the selected area of this image."
+    ],
+    "brandColor": "#111827"
+  }
+}

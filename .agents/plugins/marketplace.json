@@ -1,0 +1,20 @@
+{
+  "name": "gpt-image-2-skill-codex-gpt",
+  "interface": {
+    "displayName": "GPT Image 2 Skills"
+  },
+  "plugins": [
+    {
+      "name": "gpt-image-2-codex",
+      "source": {
+        "source": "local",
+        "path": "./plugins/gpt-image-2-codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Creativity"
+    }
+  ]
+}
