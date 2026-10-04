@@ -313,14 +313,11 @@ def credential_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--timeout", type=int, default=180)
 
 
-def common_image_args(parser: argparse.ArgumentParser, *, output_dir: bool = False) -> None:
+def common_image_args(parser: argparse.ArgumentParser) -> None:
     credential_args(parser)
     parser.add_argument("--model", default=os.environ.get("IMAGE_MODEL", DEFAULT_MODEL))
     parser.add_argument("--prompt", required=True)
-    if output_dir:
-        parser.add_argument("--out-dir", required=True)
-    else:
-        parser.add_argument("--out", required=True)
+    parser.add_argument("--out", required=True)
     parser.add_argument("--size", default="auto")
     parser.add_argument("--quality", default="auto")
     parser.add_argument("--output-format", choices=["png", "jpeg", "webp"], default="png")
@@ -417,9 +414,6 @@ def main() -> None:
     edit.add_argument("--mask")
     edit.add_argument("--mask-ring", action="store_true")
 
-    all_models = sub.add_parser("generate-all", help="Generate one image for every discovered image model")
-    common_image_args(all_models, output_dir=True)
-
     args = parser.parse_args()
     key, base_url = resolve_credentials(args)
     if args.command == "models":
@@ -442,25 +436,5 @@ def main() -> None:
     if args.command == "edit":
         run_edit(args, key, base_url)
         return
-    if args.command == "generate-all":
-        if args.dry_run:
-            print(json.dumps({"endpoint": f"{base_url}/models", "operation": "discover image models then generate once per model", "out_dir": str(Path(args.out_dir).expanduser().resolve())}, indent=2, sort_keys=True))
-            return
-        if not key:
-            die("missing API key")
-        models_response = get_json(f"{base_url}/models", key, args.timeout)
-        ids = image_models(models_response)
-        if not ids:
-            die("no image-capable models were found at /models")
-        out_dir = Path(args.out_dir).expanduser().resolve()
-        out_dir.mkdir(parents=True, exist_ok=True)
-        for model_id in ids:
-            args.model = model_id
-            args.out = str(out_dir / f"{re.sub(r'[^A-Za-z0-9._-]+', '_', model_id)}.{args.output_format}")
-            args.force = True
-            run_generate(args, key, base_url)
-        return
-
-
 if __name__ == "__main__":
     main()

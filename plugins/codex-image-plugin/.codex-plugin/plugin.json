@@ -1,6 +1,6 @@
 {
   "name": "codex-image-plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A Codex plugin for generating and editing images through any OpenAI-compatible image API.",
   "author": {
     "name": "Starfall",
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Codex Image Plugin",
     "shortDescription": "Generate and edit images with any compatible image API",
-    "longDescription": "Pass an image API URL, key, and model to generate or edit images. List image-capable models exposed by the endpoint, or explicitly generate one result per discovered image model.",
+    "longDescription": "Pass an image API URL, key, and model to generate or edit images. List image-capable models exposed by the endpoint before choosing a model.",
     "developerName": "Starfall",
     "category": "Creativity",
     "capabilities": [

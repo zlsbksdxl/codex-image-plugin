@@ -9,7 +9,7 @@
 - 使用任意兼容接口提供的模型生成图片。
 - 使用一张或多张参考图修图，并支持 alpha PNG mask。
 - 查询接口暴露的模型列表。
-- 使用 `generate-all` 为发现到的每个画图模型分别生成结果。
+- 在接口暴露的画图模型中查询并选择一个模型。
 - 支持命令行参数、环境变量和 Codex 当前 provider 配置。
 - 不打印或保存 API key，也不会使用 Codex 会话 bearer token。
 
@@ -68,22 +68,9 @@ python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
 
 多张参考图可以重复使用 `--image`。局部编辑使用 `--mask mask.png`；方形图片可以用 `--mask-ring` 生成外圈 mask。
 
-## 调用所有发现到的画图模型
-
-```bash
-python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
-  generate-all \
-  --base-url "https://api.example.com/v1" \
-  --api-key "$OPENAI_API_KEY" \
-  --prompt "一张干净的建筑方案可视化图" \
-  --out-dir outputs/by-model
-```
-
-`generate-all` 会先请求 `/models`，根据模型 ID 或能力元数据筛选画图模型，然后为每个模型分别请求一次生成。这个操作可能产生多次 API 费用；如果接口没有 `/models`，请使用 `generate --model` 手动指定模型。
-
 ## Dry-run 和配置
 
-给 `models`、`generate`、`edit` 或 `generate-all` 添加 `--dry-run`，可以只检查 endpoint 和 payload，不发起 API 请求。尺寸、质量、mask、格式和透明背景等限制由具体接口决定，接口错误会直接返回。
+给 `models`、`generate` 或 `edit` 添加 `--dry-run`，可以只检查 endpoint 和 payload，不发起 API 请求。尺寸、质量、mask、格式和透明背景等限制由具体接口决定，接口错误会直接返回。
 
 ## 许可证
 

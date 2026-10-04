@@ -9,9 +9,9 @@ Use `scripts/image.py` as the API wrapper. It accepts an explicit endpoint URL a
 
 ## Workflow
 
-1. Decide whether the request is `models`, `generate`, `edit`, or `generate-all`.
+1. Decide whether the request is `models`, `generate`, or `edit`.
 2. If the user supplied a URL and key, pass them with `--base-url` and `--api-key` or use environment variables. Prefer environment variables when the key should not appear in shell history.
-3. Use `models` to inspect the endpoint before choosing a model. Use `generate-all` only when the user explicitly wants a separate result from every image-capable model because it can create multiple paid requests.
+3. Use `models` to inspect the endpoint before choosing a model.
 4. For edits, obtain the actual input files first. Keep source images unchanged and write new results by default.
 5. Save user-facing results under `outputs/` unless the user requests another path, then inspect the result and report exact paths.
 
@@ -56,18 +56,6 @@ python3 <plugin-root>/skills/codex-image-plugin/scripts/image.py edit \
 ```
 
 Repeat `--image` for multiple references. Use `--mask mask.png` for localized edits. A mask must be a PNG with alpha: transparent pixels are editable and opaque pixels are preserved. `--mask-ring` creates a temporary ring mask for a square image.
-
-## Generate with every discovered image model
-
-```bash
-python3 <plugin-root>/skills/codex-image-plugin/scripts/image.py generate-all \
-  --base-url "https://api.example.com/v1" \
-  --api-key "$OPENAI_API_KEY" \
-  --prompt "A clean architectural visualization" \
-  --out-dir outputs/by-model
-```
-
-`generate-all` calls `/models`, filters image-like IDs or image-capability metadata, and writes one result per model. If the endpoint does not expose `/models`, pass a model explicitly to `generate`.
 
 ## Prompting and validation
 

@@ -9,7 +9,7 @@ A public Codex plugin for generating and editing raster images through an OpenAI
 - Generate images with any compatible model ID.
 - Edit one or more reference images and optional alpha masks.
 - List models exposed by the configured endpoint.
-- Generate one result per discovered image-capable model with `generate-all`.
+- Inspect image-capable models exposed by the endpoint before choosing a model.
 - Accept credentials from `--base-url`/`--api-key`, environment variables, or the active Codex provider.
 - Never print or persist API keys. Codex session bearer tokens are not used.
 
@@ -68,22 +68,9 @@ python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
 
 Repeat `--image` for multiple references. Add `--mask mask.png` for a localized edit or `--mask-ring` for a generated outer-ring mask on a square image.
 
-## Use every discovered image model
-
-```bash
-python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
-  generate-all \
-  --base-url "https://api.example.com/v1" \
-  --api-key "$OPENAI_API_KEY" \
-  --prompt "A clean architectural visualization" \
-  --out-dir outputs/by-model
-```
-
-`generate-all` first calls `/models`, filters image-like IDs or image-capability metadata, then makes one paid generation request per match. Use it only when you want separate outputs from every discovered image model. If an endpoint does not expose `/models`, call `generate` with an explicit `--model`.
-
 ## Dry-run and configuration
 
-Add `--dry-run` to `models`, `generate`, `edit`, or `generate-all` to inspect the endpoint and payload without making an API request. Model-specific limits for size, quality, masks, formats, and transparency are determined by the endpoint; the API response is reported directly when a request is invalid.
+Add `--dry-run` to `models`, `generate`, or `edit` to inspect the endpoint and payload without making an API request. Model-specific limits for size, quality, masks, formats, and transparency are determined by the endpoint; the API response is reported directly when a request is invalid.
 
 ## License
 
