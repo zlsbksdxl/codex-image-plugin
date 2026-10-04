@@ -28,6 +28,7 @@
       "Read",
       "Write"
     ],
+    "composerIcon": "./assets/icon.svg",
     "websiteURL": "https://github.com/zlsbksdxl/codex-image-plugin",
     "defaultPrompt": [
       "Use this image API URL and key to list available image models.",
