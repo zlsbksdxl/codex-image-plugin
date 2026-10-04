@@ -16,7 +16,7 @@ A public Codex plugin for generating and editing raster images through an OpenAI
 ## Install from GitHub
 
 ```bash
-codex plugin marketplace add zlsbksdxl/gpt-image-2-skill-codex-gpt --ref main
+codex plugin marketplace add zlsbksdxl/codex-image-plugin --ref main
 codex plugin add codex-image-plugin@codex-image-plugin
 ```
 
@@ -25,7 +25,7 @@ Restart Codex or start a new task after installation. Invoke the skill with `$co
 ## Local development
 
 ```bash
-cd /Users/starfall/Project/gpt-image-2-skill-codex-gpt
+cd /Users/starfall/Project/codex-image-plugin
 python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
   models \
   --base-url "https://api.example.com/v1" \

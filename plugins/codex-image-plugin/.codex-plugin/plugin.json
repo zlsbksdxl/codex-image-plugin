@@ -6,8 +6,8 @@
     "name": "Starfall",
     "url": "https://github.com/zlsbksdxl"
   },
-  "homepage": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
-  "repository": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
+  "homepage": "https://github.com/zlsbksdxl/codex-image-plugin",
+  "repository": "https://github.com/zlsbksdxl/codex-image-plugin",
   "license": "MIT",
   "keywords": [
     "image-generation",
@@ -28,7 +28,7 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/zlsbksdxl/gpt-image-2-skill-codex-gpt",
+    "websiteURL": "https://github.com/zlsbksdxl/codex-image-plugin",
     "defaultPrompt": [
       "Use this image API URL and key to list available image models.",
       "Generate an image with this image API URL, key, and model.",
