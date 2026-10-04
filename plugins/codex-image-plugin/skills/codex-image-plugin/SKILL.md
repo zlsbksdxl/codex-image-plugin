@@ -5,7 +5,7 @@ description: Generate or edit raster images through an OpenAI-compatible image A
 
 # Codex Image Plugin
 
-Use `scripts/image.py` as the API wrapper. It accepts an explicit endpoint URL and API key, or reads them from `OPENAI_BASE_URL`/`OPENAI_API_KEY` and the active Codex provider in `~/.codex/config.toml`. The selected `--model` is passed through unchanged, so the endpoint can expose any compatible image model. Do not print, persist, or reuse a Codex session bearer token as an image API key.
+Use `scripts/image.py` as the API wrapper. It accepts an explicit endpoint URL, API key, and model, or reads them from `OPENAI_BASE_URL`/`OPENAI_API_KEY`/`IMAGE_MODEL` and the active Codex provider in `~/.codex/config.toml` (`base_url`, `OPENAI_API_KEY`, `image_model`). The selected `--model` is passed through unchanged, so the endpoint can expose any compatible image model. Do not print, persist, or reuse a Codex session bearer token as an image API key.
 
 ## Workflow
 

@@ -72,6 +72,19 @@ Repeat `--image` for multiple references. Add `--mask mask.png` for a localized 
 
 Add `--dry-run` to `models`, `generate`, or `edit` to inspect the endpoint and payload without making an API request. Model-specific limits for size, quality, masks, formats, and transparency are determined by the endpoint; the API response is reported directly when a request is invalid.
 
+Configure the endpoint, key, and default model once in `~/.codex/config.toml`:
+
+```toml
+model_provider = "OpenAI"
+
+[model_providers.OpenAI]
+base_url = "https://api.example.com/v1"
+OPENAI_API_KEY = "your-image-api-key"
+image_model = "your-image-model-id"
+```
+
+The lookup order is command-line flags, environment variables (`OPENAI_BASE_URL`, `OPENAI_API_KEY`, `IMAGE_MODEL`), then the active Codex provider. After this is configured, ordinary image requests do not need the URL, key, or model repeated. Use `--model` when a single request should use another model.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

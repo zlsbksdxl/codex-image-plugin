@@ -95,8 +95,10 @@ def _load_config(config: Path) -> dict[str, Any]:
     return {}
 
 
-def read_codex_credentials(config: Path) -> tuple[str | None, str | None]:
+def read_codex_credentials(config: Path) -> tuple[str | None, str | None, str | None]:
     data = _load_config(config)
+    configured_model = data.get("image_model")
+    configured_model = str(configured_model) if configured_model else None
     providers = data.get("model_providers", {})
     if not isinstance(providers, dict):
         providers = {}
@@ -112,9 +114,14 @@ def read_codex_credentials(config: Path) -> tuple[str | None, str | None]:
             continue
         key = provider.get("OPENAI_API_KEY") or provider.get("api_key")
         base_url = provider.get("base_url")
-        if key or base_url:
-            return (str(key) if key else None, str(base_url) if base_url else None)
-    return None, None
+        image_model = provider.get("image_model") or configured_model
+        if key or base_url or image_model:
+            return (
+                str(key) if key else None,
+                str(base_url) if base_url else None,
+                str(image_model) if image_model else None,
+            )
+    return None, None, configured_model
 
 
 def normalize_base_url(value: str | None) -> str:
@@ -315,7 +322,7 @@ def credential_args(parser: argparse.ArgumentParser) -> None:
 
 def common_image_args(parser: argparse.ArgumentParser) -> None:
     credential_args(parser)
-    parser.add_argument("--model", default=os.environ.get("IMAGE_MODEL", DEFAULT_MODEL))
+    parser.add_argument("--model", default=None)
     parser.add_argument("--prompt", required=True)
     parser.add_argument("--out", required=True)
     parser.add_argument("--size", default="auto")
@@ -332,9 +339,11 @@ def common_image_args(parser: argparse.ArgumentParser) -> None:
 
 
 def resolve_credentials(args: argparse.Namespace) -> tuple[str | None, str]:
-    config_key, config_url = read_codex_credentials(Path(args.config).expanduser())
+    config_key, config_url, config_model = read_codex_credentials(Path(args.config).expanduser())
     key = args.api_key or os.getenv("OPENAI_API_KEY") or config_key
     base_url = normalize_base_url(args.base_url or os.getenv("OPENAI_BASE_URL") or config_url)
+    if hasattr(args, "model"):
+        args.model = args.model or os.getenv("IMAGE_MODEL") or config_model or DEFAULT_MODEL
     if not key and not args.dry_run:
         die("missing API key; pass --api-key or set OPENAI_API_KEY")
     return key, base_url

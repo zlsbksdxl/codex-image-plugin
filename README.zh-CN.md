@@ -72,6 +72,19 @@ python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
 
 给 `models`、`generate` 或 `edit` 添加 `--dry-run`，可以只检查 endpoint 和 payload，不发起 API 请求。尺寸、质量、mask、格式和透明背景等限制由具体接口决定，接口错误会直接返回。
 
+可以在 `~/.codex/config.toml` 中一次配置接口、key 和默认模型：
+
+```toml
+model_provider = "OpenAI"
+
+[model_providers.OpenAI]
+base_url = "https://api.example.com/v1"
+OPENAI_API_KEY = "your-image-api-key"
+image_model = "your-image-model-id"
+```
+
+读取优先级是命令行参数、环境变量（`OPENAI_BASE_URL`、`OPENAI_API_KEY`、`IMAGE_MODEL`），最后是当前 Codex provider。配置完成后，普通画图或修图对话不需要重复输入 URL、key 和模型；单次切换模型时再使用 `--model` 覆盖即可。
+
 ## 许可证
 
 MIT，详见 [LICENSE](LICENSE)。
