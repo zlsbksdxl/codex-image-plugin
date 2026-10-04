@@ -72,6 +72,8 @@ python3 plugins/codex-image-plugin/skills/codex-image-plugin/scripts/image.py \
 
 给 `models`、`generate` 或 `edit` 添加 `--dry-run`，可以只检查 endpoint 和 payload，不发起 API 请求。尺寸、质量、mask、格式和透明背景等限制由具体接口决定，接口错误会直接返回。
 
+插件每次运行都会自动读取 `~/.codex/config.toml`，使用当前 provider 的 `base_url`、`OPENAI_API_KEY` 和 `image_model`。因此不需要在每次对话中重复输入 URL 和 key。插件不会读取或把 `experimental_bearer_token` 当作图片 API key 使用。
+
 可以在 `~/.codex/config.toml` 中一次配置接口、key 和默认模型：
 
 ```toml

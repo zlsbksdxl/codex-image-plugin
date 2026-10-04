@@ -1,6 +1,6 @@
 {
   "name": "codex-image-plugin",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A Codex plugin for generating and editing images through any OpenAI-compatible image API.",
   "author": {
     "name": "Starfall",

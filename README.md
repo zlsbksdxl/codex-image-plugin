@@ -72,6 +72,8 @@ Repeat `--image` for multiple references. Add `--mask mask.png` for a localized 
 
 Add `--dry-run` to `models`, `generate`, or `edit` to inspect the endpoint and payload without making an API request. Model-specific limits for size, quality, masks, formats, and transparency are determined by the endpoint; the API response is reported directly when a request is invalid.
 
+The plugin automatically reads `~/.codex/config.toml` on every invocation. It takes the active provider's `base_url`, `OPENAI_API_KEY`, and `image_model`, so you do not need to enter the URL and key in every conversation. It never reads or reuses `experimental_bearer_token` as an image API key.
+
 Configure the endpoint, key, and default model once in `~/.codex/config.toml`:
 
 ```toml
